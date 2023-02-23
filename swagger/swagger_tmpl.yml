@@ -1,0 +1,154 @@
+openapi: 3.0.3
+info:
+  title: Swagger Triton Prosit model serving - OpenAPI 3.0
+  description: |-
+    This is a documentation file for Prosit Triton models
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://{{triton_server_ip~':'~triton_server_port}}/v2/models
+tags:
+  - name: model
+    description: Everything about Prosit model
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+paths:
+{% for model in models %}
+  /{{model.name}}/infer:
+     post:
+      tags:
+        - model
+      summary: Get prediction
+      description: Get prediction
+      operationId: infer
+      requestBody:
+        description: Get a prediction
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{model.name ~ '_' ~ 'input'}}'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/{{model.name ~ '_' ~ 'input'}}'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/{{model.name ~ '_' ~ 'input'}}'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
+        '405':
+          description: Invalid input
+{% endfor %}
+
+components:
+  schemas:
+    parameters:
+      type: object
+      properties:
+        sequence_id:
+          type: integer
+          example: 0
+        sequence_start:
+          type: boolean
+          example: false
+        sequence_end:
+          type: boolean
+          example: false
+
+{% for model in models %}
+  
+    {{model.name ~ '_' ~ 'output'}}:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "it_can_be_anything"
+        model_name:
+          type: string
+          example: "{{model.name}}"
+        model_version:
+          type: string
+          example: "1"
+        parameters:
+          $ref: '#/components/schemas/parameters'
+        outputs:
+          type: array
+          items:
+            allOf:
+            {% for output in model.output %}
+              - $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output_'~output.name}}'
+            {% endfor %}
+
+  {% for output in model.output %}
+    {{model.name ~ '_' ~ 'output_'~output.name}}:
+        type: object
+        properties:
+          name:
+            type: string
+            example: "{{output.name}}"
+          datatype:
+            type: string
+            example: "FP32"
+          shape:
+            type: array
+            items:
+              type: number
+              example: [1,174]
+          data:
+            type: array
+            items:
+              type: number
+              example: {{example_output[model.name]}}
+
+  {% endfor %}
+
+    {{model.name ~ '_' ~ 'input'}}:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "it_can_be_anything"
+        inputs:
+          type: array
+          example: {{ example_input[model.name]  }}
+          items:
+            allOf:
+              {% for input in model.input %}
+              - $ref: "#/components/schemas/{{model.name ~ '_' ~ 'input_'~input.name}}"
+              {% endfor %}
+        
+  {% for input in model.input %}
+    {{model.name ~ '_' ~ 'input_'~input.name}}:
+      type: object
+      properties:
+        name:
+          type: string
+        shape:
+          type: array
+          items:
+            type: integer
+        datatype:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+  {% endfor %}
+{% endfor %}
