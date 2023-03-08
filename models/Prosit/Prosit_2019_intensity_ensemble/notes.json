@@ -1,0 +1,29 @@
+{
+    "description": "This is a sample description for the prosit 2019 intensity ensemble. The below code allows you to send request via GRPC in python",
+    "summary":"This is a sample description",
+    "tag":"intensity",
+    "tag_description": "Prosit intensity 2019",
+    "tag_url":"proteomics.db",
+    "examples":{
+        "input":[
+                {
+                    "name": "precursor_charge_in_int:0",
+                    "shape": [1, 1],
+                    "datatype": "INT32",
+                    "data": [1]
+                },
+                {
+                        "name": "collision_energy_in:0",
+                        "shape": [1, 1],
+                        "datatype": "FP32",
+                        "data": [0.25]
+                },
+                {
+                    "name": "peptides_in_str:0",
+                    "shape": [1, 1],
+                    "datatype": "BYTES",
+                    "data": ["AAAAAKAK"]
+                }
+            ]
+        }
+}

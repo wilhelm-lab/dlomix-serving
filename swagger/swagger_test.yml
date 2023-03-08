@@ -1,0 +1,146 @@
+openapi: 3.0.3
+info:
+  title: Swagger Triton Prosit model serving - OpenAPI 3.0
+  description: |-
+    This is a documentation file for Prosit Triton models
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://10.152.171.77:8502/v2/models
+
+tags:
+  - name: intensity
+    description: Prosit intensity 2019
+    externalDocs:
+      description: Find out more
+      url: proteomics.db
+
+paths:
+
+  /Prosit_2019_intensity_ensemble/infer:
+     post:
+      tags:
+        - intensity
+      summary: This is a sample description
+      description: 'This is a sample description for the prosit 2019 intensity ensemble
+<br><code>import numpy as np<br>import time<br>import tritonclient.grpc as grpcclient<br>if __name__ == "__main__":<br><pre>server_url ="10.152.171.77:8502"<br>model_name"Prosit_2019_intensity_ensemble"<br>  out_layer0="out/Reshape:1"<br>  out_layer1="out/Reshape:2"<br>  batch_size = 5<br>  inputs = []<br>  triton_client = grpcclient.InferenceServerClient(url=server_url)<br>inputs.append(grpcclient.InferInput(peptides_in_str:0 [batch_size, 1],TYPE_STRING))<br>inputs.append(grpcclient.InferInput(precursor_charge_in_int:0 [batch_size, 1],TYPE_INT32))<br>inputs.append(grpcclient.InferInput(collision_energy_in:0 [batch_size, 1],TYPE_FP32))<br># Create the data for the two input tensors. Initialize the first \ n# to unique integers and the second to all ones. <br>  peptide_seq_in = np.array([["AAAAAKAKM[UNIMOD:35]"] for i in range(0, batch_size)], dtype=np.object_)<br>  ce_in = np.array([[25] for i in range(0, batch_size)], dtype=np.float32)<br>  precursor_charge_in = np.array([[2] for i in range(0, batch_size)], dtype=np.int32)<br>  print("len: " + str(len(inputs)))<br>  inputs[0].set_data_from_numpy(peptide_seq_in)<br>  inputs[1].set_data_from_numpy(ce_in)<br>  inputs[2].set_data_from_numpy(precursor_charge_in)<br>  outputs = [grpcclient.InferRequestedOutput(out_layer1),grpcclient.InferRequestedOutput(out_layer2)]<br>  start = time.time()<br>  result = triton_client.infer(model_name, inputs=inputs, outputs=outputs)<br>  end = time.time()<br>  print("Time: " + str(end - start))<br>  print("Result")<br>  print(np.round(result.as_numpy(out_layer1), 1))<br>  print(np.round(result.as_numpy(out_layer2), 1))<br></pre></code>'
+      operationId: infer
+      requestBody:
+        description: Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_input'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_input'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_input'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
+          #   application/xml:
+          #     schema:
+          #       $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
+        '405':
+          description: Invalid input
+
+
+components:
+  schemas:
+    parameters:
+      type: object
+      properties:
+        sequence_id:
+          type: integer
+          example: 0
+        sequence_start:
+          type: boolean
+          example: false
+        sequence_end:
+          type: boolean
+          example: false
+
+
+    Prosit_2019_intensity_ensemble_input:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "it_can_be_anything"
+        inputs:
+          type: array
+          example: [{'name': 'precursor_charge_in_int:0', 'shape': [1, 1], 'datatype': 'INT32', 'data': [1]}, {'name': 'collision_energy_in:0', 'shape': [1, 1], 'datatype': 'FP32', 'data': [0.25]}, {'name': 'peptides_in_str:0', 'shape': [1, 1], 'datatype': 'BYTES', 'data': ['AAAAAKAK']}]
+          items:
+            allOf:
+              
+              - $ref: "#/components/schemas/Prosit_2019_intensity_ensemble_input_peptides_in_str:0"
+              
+              - $ref: "#/components/schemas/Prosit_2019_intensity_ensemble_input_precursor_charge_in_int:0"
+              
+              - $ref: "#/components/schemas/Prosit_2019_intensity_ensemble_input_collision_energy_in:0"
+              
+        
+  
+    Prosit_2019_intensity_ensemble_input_peptides_in_str:0:
+      type: object
+      properties:
+        name:
+          type: string
+        shape:
+          type: array
+          items:
+            type: integer
+        datatype:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+  
+    Prosit_2019_intensity_ensemble_input_precursor_charge_in_int:0:
+      type: object
+      properties:
+        name:
+          type: string
+        shape:
+          type: array
+          items:
+            type: integer
+        datatype:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+  
+    Prosit_2019_intensity_ensemble_input_collision_energy_in:0:
+      type: object
+      properties:
+        name:
+          type: string
+        shape:
+          type: array
+          items:
+            type: integer
+        datatype:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+  
