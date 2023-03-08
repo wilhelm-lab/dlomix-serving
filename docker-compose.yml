@@ -50,7 +50,7 @@ services:
       TRITON_SERVER_IP: "10.152.171.77"
       TRITON_REVERSE_PROXY_SERVER_PORT: "8502"
     volumes:
-      - ./swagger:/swagger
+      - ./:/workspace
     command:
       - /bin/sh
       - -c 
@@ -58,7 +58,7 @@ services:
         pip install requests
         pip install jinja2
         pip install PyYAML
-        cd /swagger
+        cd /workspace/swagger
         python swagger_gen.py
 
   swagger:
@@ -69,6 +69,6 @@ services:
     ports:
       - 8080:8080
     environment:
-      SWAGGER_JSON: /swagger/swagger_test.yml
+      SWAGGER_JSON: /workspace/swagger/swagger_test.yml
     volumes:
-      - ./swagger:/swagger
+      - ./:/workspace

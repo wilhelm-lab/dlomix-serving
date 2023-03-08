@@ -15,23 +15,25 @@ externalDocs:
   url: http://swagger.io
 servers:
   - url: http://{{triton_server_ip~':'~triton_server_port}}/v2/models
+{% for model in models %}
 tags:
-  - name: model
-    description: Everything about Prosit model
+  - name: {{model.note.tag}}
+    description: {{model.note.tag_description }}
     externalDocs:
       description: Find out more
-      url: http://swagger.io
+      url: {{model.note.tag_url}}
+{% endfor %}
 paths:
 {% for model in models %}
   /{{model.name}}/infer:
      post:
       tags:
-        - model
-      summary: Get prediction
-      description: Get prediction
+        - {{model.note.tag}}
+      summary: {{model.note.summary}}
+      description: '{{model.note.description ~ '\n' ~ model.note.code}}'
       operationId: infer
       requestBody:
-        description: Get a prediction
+        description: Body
         content:
           application/json:
             schema:
@@ -46,13 +48,13 @@ paths:
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
+          #   application/xml:
+          #     schema:
+          #       $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output'}}'
         '405':
           description: Invalid input
 {% endfor %}
@@ -73,52 +75,6 @@ components:
           example: false
 
 {% for model in models %}
-  
-    {{model.name ~ '_' ~ 'output'}}:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "it_can_be_anything"
-        model_name:
-          type: string
-          example: "{{model.name}}"
-        model_version:
-          type: string
-          example: "1"
-        parameters:
-          $ref: '#/components/schemas/parameters'
-        outputs:
-          type: array
-          items:
-            allOf:
-            {% for output in model.output %}
-              - $ref: '#/components/schemas/{{model.name ~ '_' ~ 'output_'~output.name}}'
-            {% endfor %}
-
-  {% for output in model.output %}
-    {{model.name ~ '_' ~ 'output_'~output.name}}:
-        type: object
-        properties:
-          name:
-            type: string
-            example: "{{output.name}}"
-          datatype:
-            type: string
-            example: "FP32"
-          shape:
-            type: array
-            items:
-              type: number
-              example: [1,174]
-          data:
-            type: array
-            items:
-              type: number
-              example: {{example_output[model.name]}}
-
-  {% endfor %}
-
     {{model.name ~ '_' ~ 'input'}}:
       type: object
       properties:
@@ -127,7 +83,7 @@ components:
           example: "it_can_be_anything"
         inputs:
           type: array
-          example: {{ example_input[model.name]  }}
+          example: {{ model.note['examples']['input'] }}
           items:
             allOf:
               {% for input in model.input %}

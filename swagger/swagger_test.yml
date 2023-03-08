@@ -15,23 +15,26 @@ externalDocs:
   url: http://swagger.io
 servers:
   - url: http://10.152.171.77:8502/v2/models
+
 tags:
-  - name: model
-    description: Everything about Prosit model
+  - name: intensity
+    description: Prosit intensity 2019
     externalDocs:
       description: Find out more
-      url: http://swagger.io
+      url: proteomics.db
+
 paths:
 
   /Prosit_2019_intensity_ensemble/infer:
      post:
       tags:
-        - model
-      summary: Get prediction
-      description: Get prediction
+        - intensity
+      summary: This is a sample description
+      description: 'This is a sample description for the prosit 2019 intensity ensemble
+<br><code>import numpy as np<br>import time<br>import tritonclient.grpc as grpcclient<br>if __name__ == "__main__":<br><pre>server_url ="10.152.171.77:8502"<br>model_name"Prosit_2019_intensity_ensemble"<br>  out_layer0="out/Reshape:1"<br>  out_layer1="out/Reshape:2"<br>  batch_size = 5<br>  inputs = []<br>  triton_client = grpcclient.InferenceServerClient(url=server_url)<br>inputs.append(grpcclient.InferInput(peptides_in_str:0 [batch_size, 1],TYPE_STRING))<br>inputs.append(grpcclient.InferInput(precursor_charge_in_int:0 [batch_size, 1],TYPE_INT32))<br>inputs.append(grpcclient.InferInput(collision_energy_in:0 [batch_size, 1],TYPE_FP32))<br># Create the data for the two input tensors. Initialize the first \ n# to unique integers and the second to all ones. <br>  peptide_seq_in = np.array([["AAAAAKAKM[UNIMOD:35]"] for i in range(0, batch_size)], dtype=np.object_)<br>  ce_in = np.array([[25] for i in range(0, batch_size)], dtype=np.float32)<br>  precursor_charge_in = np.array([[2] for i in range(0, batch_size)], dtype=np.int32)<br>  print("len: " + str(len(inputs)))<br>  inputs[0].set_data_from_numpy(peptide_seq_in)<br>  inputs[1].set_data_from_numpy(ce_in)<br>  inputs[2].set_data_from_numpy(precursor_charge_in)<br>  outputs = [grpcclient.InferRequestedOutput(out_layer1),grpcclient.InferRequestedOutput(out_layer2)]<br>  start = time.time()<br>  result = triton_client.infer(model_name, inputs=inputs, outputs=outputs)<br>  end = time.time()<br>  print("Time: " + str(end - start))<br>  print("Result")<br>  print(np.round(result.as_numpy(out_layer1), 1))<br>  print(np.round(result.as_numpy(out_layer2), 1))<br></pre></code>'
       operationId: infer
       requestBody:
-        description: Get a prediction
+        description: Body
         content:
           application/json:
             schema:
@@ -46,13 +49,13 @@ paths:
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
+          #   application/xml:
+          #     schema:
+          #       $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output'
         '405':
           description: Invalid input
 
@@ -72,75 +75,6 @@ components:
           type: boolean
           example: false
 
-
-  
-    Prosit_2019_intensity_ensemble_output:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "it_can_be_anything"
-        model_name:
-          type: string
-          example: "Prosit_2019_intensity_ensemble"
-        model_version:
-          type: string
-          example: "1"
-        parameters:
-          $ref: '#/components/schemas/parameters'
-        outputs:
-          type: array
-          items:
-            allOf:
-            
-              - $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output_out/Reshape:1'
-            
-              - $ref: '#/components/schemas/Prosit_2019_intensity_ensemble_output_out/Reshape:2'
-            
-
-  
-    Prosit_2019_intensity_ensemble_output_out/Reshape:1:
-        type: object
-        properties:
-          name:
-            type: string
-            example: "out/Reshape:1"
-          datatype:
-            type: string
-            example: "FP32"
-          shape:
-            type: array
-            items:
-              type: number
-              example: [1,174]
-          data:
-            type: array
-            items:
-              type: number
-              example: [0.461770623922348, -1.0, -1.0, 0.06809068471193314, -1.0, -1.0, 0.32882586121559143, -1.0, -1.0, 0.13633368909358978, -1.0, -1.0, 0.6066970825195312, -1.0, -1.0, 0.47628480195999146, -1.0, -1.0, 0.8252231478691101, -1.0, -1.0, 0.6286046504974365, -1.0, -1.0, 0.8001991510391235, -1.0, -1.0, 0.6677533388137817, -1.0, -1.0, 0.6667646765708923, -1.0, -1.0, 1.0, -1.0, -1.0, 0.24044056236743927, -1.0, -1.0, 0.8719386458396912, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0]
-
-  
-    Prosit_2019_intensity_ensemble_output_out/Reshape:2:
-        type: object
-        properties:
-          name:
-            type: string
-            example: "out/Reshape:2"
-          datatype:
-            type: string
-            example: "FP32"
-          shape:
-            type: array
-            items:
-              type: number
-              example: [1,174]
-          data:
-            type: array
-            items:
-              type: number
-              example: [0.461770623922348, -1.0, -1.0, 0.06809068471193314, -1.0, -1.0, 0.32882586121559143, -1.0, -1.0, 0.13633368909358978, -1.0, -1.0, 0.6066970825195312, -1.0, -1.0, 0.47628480195999146, -1.0, -1.0, 0.8252231478691101, -1.0, -1.0, 0.6286046504974365, -1.0, -1.0, 0.8001991510391235, -1.0, -1.0, 0.6677533388137817, -1.0, -1.0, 0.6667646765708923, -1.0, -1.0, 1.0, -1.0, -1.0, 0.24044056236743927, -1.0, -1.0, 0.8719386458396912, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0]
-
-  
 
     Prosit_2019_intensity_ensemble_input:
       type: object
